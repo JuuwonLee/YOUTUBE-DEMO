@@ -1,8 +1,8 @@
 // express 모듈 셋팅
 const express = require('express')
-const app = express()
-app.listen(1234)
+const router = express.Router()
 
+router.use(express.json()) // http 외 모듈인 '미들웨어' :json 설정
 let user1 = {
     id : "abc111",
     pwd : "pwd1",
@@ -20,13 +20,13 @@ let user3 = {
 }
 
 let db = new Map()
-var idx = 1
+var idx = 1                         
 
 db.set(idx++, user1)
 db.set(idx++, user2)
 db.set(idx++, user3)
 
-app.post('/join',  (req, res) =>  {
+router.post('/join',  (req, res) =>  {
     const id = req.body.id
     const pwd = req.body.pwd
     const name = req.body.name
@@ -56,8 +56,8 @@ app.post('/join',  (req, res) =>  {
   // 등록 : map(db)에 저장(put) 해야 함    
 })
 
-app.use(express.json()) // http 외 모듈인 '미들웨어' :json 설정
-app.post('/login',  (req, res) =>  {
+
+router.post('/login',  (req, res) =>  {
     const id = req.body.id
     const pwd = req.body.pwd
     
@@ -85,7 +85,7 @@ app.post('/login',  (req, res) =>  {
 })
 
 // 회원 개별 조회
-app.get('/users/:idx', function(req, res){
+router.get('/users/:idx', function(req, res){
     let {idx} = req.params
     idx = parseInt(idx)
 
@@ -100,7 +100,7 @@ app.get('/users/:idx', function(req, res){
 })
 
 // 회원 개별 탈퇴
-app.delete('/users/:idx', function(req, res){
+router.delete('/users/:idx', function(req, res){
     let {idx} = req.params
     idx = parseInt(idx)
     
@@ -119,3 +119,5 @@ app.delete('/users/:idx', function(req, res){
     }
         
 })
+
+module.exports = router
